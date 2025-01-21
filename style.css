@@ -1,0 +1,221 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #eee;
+}
+
+div {
+    position: relative;
+}
+
+.shadow {
+    -webkit-box-shadow: 5px 5px 7px 5px rgba(163,163,163,0.7);
+    -moz-box-shadow: 5px 5px 7px 5px rgba(163,163,163,0.7);
+    box-shadow: 5px 5px 7px 5px rgba(163,163,163,0.7);
+    z-index: 1;
+}
+
+.lighterShadow {
+    -webkit-box-shadow: 2px 2px 5px 3px rgba(180,180,180,0.5);
+    -moz-box-shadow: 2px 2px 5px 3px rgba(180,180,180,0.5);
+    box-shadow: 2px 2px 5px 3px rgba(180,180,180,0.5);
+    z-index: 1;
+}
+
+.loginDiv {
+    width: 50%;
+    min-width: 280px;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    text-align: center;
+    background-color: #257598;
+}
+
+.loginDiv h1 {
+    margin-bottom: -3%;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.loginForm {
+    margin: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.loginForm input {
+    margin-bottom: 4%;
+    width: 100%;
+    font-size: 15px;
+    line-height: 150%;
+    border-radius: 5px;
+    padding: 5px;
+    border: none;
+}
+
+.loginForm input[type="submit"] {
+    cursor: pointer;
+    width: 40%;
+    background-color: #62c9a1;
+    min-width: 130px;
+}
+
+.loginForm input[type="submit"]:hover {
+    background-color: #81e4be;
+}
+
+.loginForm input[type="button"] {
+    cursor: pointer;
+    background-color: #257598;
+    margin-bottom: -5%;
+    width: 100%;
+    font-size: 15px;
+    line-height: 150%;
+    border-radius: 5px;
+    padding: 0;
+    color: #ccc;
+}
+
+.loginForm input[type="button"]:hover {
+    transform: scale(1.03);
+}
+
+
+
+
+
+.navBar {
+    background-color: #257598;
+    height: 40px;
+    margin-bottom: 15px;
+    z-index: 5;
+}
+
+.navTitle {
+    list-style: none;
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+}
+
+.navTitle h1{
+    margin: 0;
+    line-height: 38px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.menuButton{
+    position: absolute;
+    top: 3px;
+    left: 1%;
+    cursor: pointer;
+}
+
+.menuButton img{
+    height: 34px;
+}
+
+.menu {
+    margin: 0;
+    width: 150px;
+    display: "none";
+}
+
+.menu ul {
+    list-style: "none";
+    margin: 0;
+    padding: 0;
+}
+
+.menu ul li {
+    background-color: #257598;
+    cursor: pointer;
+    padding: 8%;
+    font-size: 16px;
+}
+
+.menu ul li:hover {
+    background-color: #2e7fa1;
+}
+
+.menu ul li a{
+    text-decoration: none;
+    color: black;
+}
+
+.createTaskForm {
+    z-index: 1;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    display: inline-flex;
+    border-radius: 10px;
+}
+
+.createTaskForm input[type="text"] {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 10px;
+    font-size: 120%;
+}
+
+.createTaskForm input[type="text"]:focus {
+    border: none;
+}
+
+#taskList { /*  ul  */
+    width: 90%;
+    list-style: none;
+    padding: 1% 0 1% 0;
+    margin: 3% 5% 0 5%;
+    border-radius: 10px;
+    background-color: #fff;
+    z-index: 1;
+}
+
+.taskDiv {  /* li */
+    display: inline-flex;
+    width: 98%;
+    min-height: 40px;
+    max-height: 50px;
+    align-items: center;
+    margin: 0.3% 1% 0.3% 1%;
+    border-radius: 5px;
+}
+
+.taskComponent {  /* div */
+    flex: 40;
+    padding: 8px;
+    align-content: center;
+    font-size: 18px;
+}
+
+.taskComponent:hover {
+    transform: scale(1.005);
+    transition: ease 0.1s;
+    cursor: pointer;
+}
+
+.deleteComponent {
+    flex: 1;
+    cursor: pointer;
+    padding: 1.5%;
+    align-content: center;
+}
+
+.deleteImg {
+    width: 16px;
+}
+
+.deleteComponent:hover img {
+    transform: scale(1.14);
+    transition: ease 0.1s;
+}

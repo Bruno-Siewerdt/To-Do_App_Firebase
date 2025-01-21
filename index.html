@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="loginDiv shadow" id="loginDiv">  <!--    LOGIN     -->
+        <h1>TO-DO</h1>
+        <form class="loginForm">
+            <input type="email" placeholder="Email" name="email" id="email">
+            <input type="password" placeholder="Password" name="password" id="password">
+            <input type="submit" value="Login">
+            <input type="button" id="createAccountState" value="Create Account">
+        </form>
+    </div>
+
+
+    <div class="loginDiv shadow" style="display: none;" id="createDiv">  <!--    CREATE ACCOUNT    -->
+        <h1>TO-DO</h1>
+        <form class="loginForm">
+            <input type="email" placeholder="Email" name="createEmail" id="createEmail">
+            <input type="password" placeholder="Password" name="createPassword" id="createPassword">
+            <input type="password" placeholder="Confirm the Password" name="createPasswordConfirm" id="createPasswordConfirm">
+            <input type="submit" value="Create Account">
+            <input type="button" id="loginState" value="Back">
+        </form>
+    </div>
+
+
+    <div class="taskListDiv" style="display: none;" id="taskListDiv">   <!--    TASKS LIST     -->
+        <div class="navBar">
+            <div class="navTitle">
+                <h1>TO-DO</h1>
+            </div>
+            <div class="menuButton" id="menuButton">
+                <img src="src/menu-hamburguer.png" alt="menu">
+            </div>
+            <div class="menu" id="menu">
+                <ul>
+                    <li><a href="#"  id="">Teste 1</a></li>
+                    <li><a href="#"  id="">Teste 2</a></li>
+                    <li><a href="#"  id="">Teste 3</a></li>
+                    <li><a href="#"  id="">Teste 4</a></li>
+                    <li><a href="#"  id="">Teste 5</a></li>
+                    <li><a href="#"  id="">Teste 6</a></li>
+                    <li><a href="#"  id="logoutButton">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <form class="createTaskForm shadow">
+            <input type="text" placeholder="Add a Task Here" name="taskName" id="taskName">
+        </form>
+        <ul id="taskList" class="shadow"></ul>
+    </div>
+
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+        apiKey: "AIzaSyD2OSJVl8C-CtYAVaGNUnmoHuQzDZrvPKk",
+        authDomain: "app1-f681f.firebaseapp.com",
+        projectId: "app1-f681f",
+        storageBucket: "app1-f681f.firebasestorage.app",
+        messagingSenderId: "474876825072",
+        appId: "1:474876825072:web:ac1e8b869a05691f922135",
+        measurementId: "G-BH58PLMK42"
+        };
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+
+        const loginDiv = document.querySelector("#loginDiv");
+        const taskListDiv = document.querySelector("#taskListDiv");
+        const createDiv = document.querySelector("#createDiv");
+        let user;
+        const db = firebase.firestore();
+        const IDS = [loginDiv, createDiv, taskListDiv];
+
+
+        function LogIn(email, password) {
+            firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                user = userCredential.user;
+                setState(taskListDiv);
+            })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                alert("Não foi possível logar");
+                firebase.auth().signOut().then(() => {
+                // Sign-out successful.
+                }).catch((error) => {
+                // An error happened.
+                });
+            });
+        }
+
+        loginDiv.addEventListener("submit",(e)=>{   // LOGIN
+            e.preventDefault();
+            let email = document.querySelector("[name=email]").value;
+            let password = document.querySelector("[name=password]").value;
+            LogIn(email, password);
+        })
+
+        document.querySelector("#logoutButton").addEventListener("click",(e)=>{
+            firebase.auth().signOut().then(() => {
+                setState(loginDiv);
+                user = null;
+            }).catch((error) => {
+                // An error happened.
+            });
+        })
+
+        taskListDiv.addEventListener("submit",(e)=>{   //  Create Task
+            e.preventDefault();
+            let taskName = document.querySelector("#taskName").value;
+            let now = new Date();
+            if(taskName != ""){
+                db.collection("tasks").add({
+                    task: taskName,
+                    userId: user.uid,
+                    time: now.getTime()
+                });
+            }
+        })
+
+        createDiv.addEventListener("submit",(e)=>{   //  Create Account
+            e.preventDefault();
+            let email = document.querySelector("[name=createEmail]").value;
+            let password = document.querySelector("[name=createPassword]").value;
+            let passwordConfirm = document.querySelector("[name=createPasswordConfirm]").value;
+            if(password == passwordConfirm){
+                firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
+                    LogIn(email, password);
+                }).catch((error) => {
+                    alert(error.message);
+                });
+            } else {
+                alert("the passwords are not the same");
+            }
+            
+        })
+
+        firebase.auth().onAuthStateChanged((val)=>{  //  When firestore is changed or start
+            if(val) {
+                user = val;
+                setState(taskListDiv);
+                db.collection('tasks').where("userId", "==", user.uid).onSnapshot((data)=>{
+                    let list = document.querySelector("#taskList");
+                    list.innerHTML = "";
+
+                    let tarefas = data.docs.sort(function(a, b){
+                        if(a.data().time < b.data().time){
+                            return -1;
+                        }
+                        return 1;
+                    })
+                    tarefas.map((val)=>{
+                        let divDelete = document.createElement("div");
+                        let divTask = document.createElement("div");
+                        let liComp = document.createElement("li");
+                        divTask.setAttribute("class", "taskComponent");
+                        divDelete.setAttribute("class", "deleteComponent");
+                        liComp.setAttribute("class", "taskDiv lighterShadow");
+                        divDelete.innerHTML = "<img src='src/delete.png' class='deleteImg'>";
+                        divTask.innerHTML = val.data().task;
+                        divDelete.onclick = ()=>{
+                            val.ref.delete();
+                        }
+                        liComp.appendChild(divTask);
+                        liComp.appendChild(divDelete);
+                        list.appendChild(liComp);
+                    })
+                })
+            }
+        })
+
+        document.querySelector("#createAccountState").addEventListener("click", (e)=>{
+            setState(createDiv);
+        })
+
+        document.querySelector("#loginState").addEventListener("click", (e)=>{
+            setState(loginDiv);
+        })
+
+        function setState(id) {
+            id.style.display = "block";
+            for(let i = 0; i < IDS.length; i++) {
+                if(IDS[i] != id) {
+                    IDS[i].style.display = "none";
+                }
+            }
+            if(id == taskListDiv) {
+                document.querySelector("#menu").style.display = "none";
+            }
+        }
+        
+        document.querySelector("#menuButton").addEventListener("click", (e)=>{
+            let menu = document.querySelector("#menu");
+            if(menu.style.display == "block"){
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "block";
+            }
+        }) 
+    </script>
+</body>
+</html>
